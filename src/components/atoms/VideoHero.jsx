@@ -2,7 +2,8 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 
 export default function VideoHero({ 
-  videoUrl = "https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-at-night-11-large.mp4",
+  videoUrl = "https://cdn.coverr.co/videos/coverr-aerial-view-of-dubai-skyline-4657/1080p.mp4",
+  posterUrl = "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1920&q=80",
   headline = "Dubai Mall",
   subtext = "The World's Most Visited Shopping & Entertainment Destination",
   ctaText = "Explore",
@@ -19,13 +20,14 @@ export default function VideoHero({
           loop
           muted
           playsInline
+          poster={posterUrl}
           className="w-full h-full object-cover"
         >
           <source src={videoUrl} type="video/mp4" />
         </video>
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-onyx/40" />
-        <div className="absolute inset-0 gradient-overlay-dark" />
+        {/* Dark gradient overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-onyx/50 via-onyx/30 to-onyx/70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-onyx/20 via-transparent to-onyx/20" />
       </div>
 
       {/* Content */}
@@ -34,7 +36,7 @@ export default function VideoHero({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-champagne text-sm tracking-[0.4em] uppercase mb-6"
+          className="text-champagne text-sm tracking-[0.5em] uppercase mb-6 font-sans"
         >
           Welcome to
         </motion.span>
@@ -52,7 +54,7 @@ export default function VideoHero({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.7 }}
-          className="text-xl md:text-2xl text-pearl/70 text-center max-w-2xl mb-12 font-light"
+          className="text-lg md:text-xl text-pearl/70 text-center max-w-2xl mb-12 font-light font-sans"
         >
           {subtext}
         </motion.p>
@@ -64,7 +66,7 @@ export default function VideoHero({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => navigate(ctaPath)}
-          className="px-10 py-4 bg-champagne text-onyx font-semibold text-lg tracking-wider uppercase hover:bg-champagne-light transition-colors duration-300"
+          className="px-10 py-4 bg-champagne text-onyx font-semibold text-lg tracking-[0.15em] uppercase hover:bg-champagne-light transition-all duration-300 shadow-lg hover:shadow-xl"
         >
           {ctaText}
         </motion.button>

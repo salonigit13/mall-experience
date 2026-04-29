@@ -1,8 +1,11 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
+  const location = useLocation()
+  const isEntry = location.pathname === '/'
 
   useEffect(() => {
     const handleScroll = () => {
@@ -12,19 +15,28 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId)
-    element?.scrollIntoView({ behavior: 'smooth' })
-  }
+  // Hide navigation on entry page
+  if (isEntry) return null
 
   const navItems = [
-    { id: 'why-dubai-mall', label: 'Why' },
-    { id: 'retail', label: 'Retail' },
-    { id: 'luxury', label: 'Luxury' },
-    { id: 'dining', label: 'Dining' },
-    { id: 'attractions', label: 'Attractions' },
-    { id: 'events', label: 'Events' },
+    { path: '/hub', label: 'Home', anchor: null },
+    { path: '/why', label: 'Why Dubai Mall', anchor: null },
+    { path: '/retail', label: 'Retail', anchor: '#retail' },
+    { path: '/luxury', label: 'Luxury', anchor: '#luxury' },
+    { path: '/dining', label: 'Dining', anchor: '#dining' },
+    { path: '/attractions', label: 'Attractions', anchor: '#attractions' },
+    { path: '/events', label: 'Events', anchor: '#events' },
   ]
+
+  const handleAnchorClick = (e, item) => {
+    if (item.anchor && location.pathname === item.path) {
+      e.preventDefault()
+      const element = document.querySelector(item.anchor)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+  }
 
   return (
     <motion.nav
@@ -33,37 +45,52 @@ export default function Navigation() {
       transition={{ duration: 0.6 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled 
-          ? 'bg-onyx/80 backdrop-blur-lg border-b border-white/5' 
+          ? 'bg-[#FDFDFB]/90 backdrop-blur-lg shadow-sm border-b border-[#e5e5e5]' 
           : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo - Dubai Mall Text */}
-          <button 
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          {/* Logo */}
+          <Link 
+            to="/hub"
             className="flex items-center gap-3 cursor-pointer"
           >
-            <span className="font-serif text-xl text-white tracking-wide">
-              Dubai Mall
+            <span className="font-display text-lg text-[#1a1a1a] tracking-widest">
+              DUBAI MALL
             </span>
-          </button>
+          </Link>
 
           {/* Nav Links */}
           <div className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="text-sm tracking-wider uppercase text-white/70 hover:text-white transition-colors duration-300"
-              >
-                {item.label}
-              </button>
+              item.anchor && location.pathname === item.path ? (
+                <a
+                  key={item.path}
+                  href={item.anchor}
+                  onClick={(e) => handleAnchorClick(e, item)}
+                  className="text-sm tracking-widest uppercase transition-colors duration-300 text-champagne-solid cursor-pointer"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`text-sm tracking-widest uppercase transition-colors duration-300 ${
+                    location.pathname === item.path 
+                      ? 'text-champagne-solid' 
+                      : 'text-[#4a4a4a] hover:text-[#1a1a1a]'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              )
             ))}
           </div>
 
           {/* Mobile Menu Button */}
-          <button className="md:hidden w-10 h-10 flex items-center justify-center text-white">
+          <button className="md:hidden w-10 h-10 flex items-center justify-center text-[#1a1a1a]">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M3 12h18M3 6h18M3 18h18" />
             </svg>
